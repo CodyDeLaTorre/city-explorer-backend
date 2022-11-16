@@ -19,3 +19,7 @@ This is the backend to my city explorer website. This is the first project where
 
 ## Credit and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
+
+![dataflow2](/img/dataflow2.png)
+
+![dataflow3](/img/dataflow3.png)
