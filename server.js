@@ -23,7 +23,6 @@ app.get('/weather', (request, response, next) => {
   try {
     let {lat, lon, place} = request.query;
     let selectedPlace = data.find(loc => loc.city_name === place);
-    console.log(selectedPlace);
     let weatherParsed = selectedPlace.data.map(day => new Forecast(day));
     response.send(weatherParsed);
   } catch (error) {
