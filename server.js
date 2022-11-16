@@ -1,5 +1,6 @@
 'use strict';
 
+const { response } = require('express');
 const express = require('express');
 let data = require('./data/weather.json');
 
@@ -11,18 +12,24 @@ const cors = require('cors');
 //USE
 const app = express();
 
+app.use(cors());
+
 //define the PORT
 const PORT = process.env.PORT || 3002;
 
-app.use(cors());
 
 
-app.get('/weather', (request, response) => {
-  let place = request.query.place;
-  let selectedPlace = data.find(loc => loc.city_name === place);
-  console.log(selectedPlace);
-  let weatherParsed = selectedPlace.data.map(day => new Forecast(day));
-  response.send(weatherParsed);
+app.get('/weather', (request, response, next) => {
+  try {
+    let {lat, lon, place} = request.query;
+    let selectedPlace = data.find(loc => loc.city_name === place);
+    console.log(selectedPlace);
+    let weatherParsed = selectedPlace.data.map(day => new Forecast(day));
+    response.send(weatherParsed);
+  } catch (error) {
+    //create a new instance of an error
+    next(error);
+  }
 });
 
 app.get('/', (request, response) => {
@@ -37,11 +44,15 @@ app.get('*', (request, response) => {
   response.send('That route does not exist homie');
 });
 
+//handle errors
+app.use((error, request, response, next) => {
+  response.status(500).send(error.message);
+});
 
 class Forecast {
   constructor(day) {
     this.date = day.datetime;
-    this.description = day.weather.description;
+    this.description = `Low of ${day.low_temp} and a high of ${day.high_temp} with ${day.weather.description}`;
   }
 }
 
