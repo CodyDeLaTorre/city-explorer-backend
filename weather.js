@@ -1,9 +1,9 @@
 const axios = require('axios');
 
-async function getWeather(req,res) {
+async function getWeather(req,res,next) {
   try {
     let {lat, lon} = req.query;
-    let url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}`;
+    let url = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${process.env.WEATHER_API_KEY}&days=3`;
     let data = await axios.get(url);
     let weatherParsed = data.data.data.map(day => new Forecast(day));
     res.send(weatherParsed);
